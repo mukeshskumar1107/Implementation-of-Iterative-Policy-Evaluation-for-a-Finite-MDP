@@ -116,7 +116,7 @@ env = env.unwrapped
 # =====================================
 # Policy Evaluation Function
 # =====================================
-def policy_evaluation(env, gamma=0.99, theta=1e-6):
+def policy_evaluation(env, gamma=0.88, theta=1e-6):
 
     n_states = env.observation_space.n
     n_actions = env.action_space.n
@@ -175,22 +175,12 @@ print(V)
 print("\nState Value Function (4 x 4 Grid):\n")
 print(V.reshape(4,4))
 
-# -------------------------------------------------
-# Display Output
-# -------------------------------------------------
-V, iterations = policy_evaluation(env)
-
-print("Number of Iterations:", iterations)
-print("\nState-Value Function as 4x4 Grid:\n")
-print(V.reshape((4, 4)))
-
 ```
 
 ---
 
 ## Output
 
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/5286c7bb-5b78-4c18-8d03-030cfd2f3897" />
 
 
 
@@ -226,7 +216,21 @@ Iterative policy evaluation was implemented successfully using the Gymnasium Fro
 
 ```text
 
-The iterative policy evaluation algorithm successfully computed the expected value of each state under a fixed random policy. States closer to the goal have higher state values, while hole and terminal states have a value of zero. The algorithm converges after repeated Bellman updates, demonstrating how dynamic programming can estimate the value function for a given policy in a finite Markov Decision Process (MDP).
+Number of Iterations: 25
+
+State Value Function:
+
+[0.00361226 0.00350253 0.00880655 0.00345955 0.00569497 0.
+ 0.02426174 0.         0.01657953 0.05308722 0.10147413 0.
+ 0.         0.12325197 0.3838971  0.        ]
+
+State Value Function (4 x 4 Grid):
+
+[[0.00361226 0.00350253 0.00880655 0.00345955]
+ [0.00569497 0.         0.02426174 0.        ]
+ [0.01657953 0.05308722 0.10147413 0.        ]
+ [0.         0.12325197 0.3838971  0.        ]]
+​
 
 ```
 ---
