@@ -98,19 +98,91 @@ Where:
 
 ## Program
 
+Name: Mukesh Kumar S
+
+Reg No.: 212223240099
+
 ```python
 
+import gymnasium as gym
+import numpy as np
 
-# -------------------------------------------------
+# =====================================
+# Create FrozenLake Environment
+# =====================================
+env = gym.make("FrozenLake-v1", is_slippery=True)
+env = env.unwrapped
+
+# =====================================
 # Policy Evaluation Function
-# -------------------------------------------------
+# =====================================
+def policy_evaluation(env, gamma=0.99, theta=1e-6):
 
+    n_states = env.observation_space.n
+    n_actions = env.action_space.n
+
+    # Initialize value function
+    V = np.zeros(n_states)
+
+    # Uniform Random Policy
+    policy = np.ones((n_states, n_actions)) / n_actions
+
+    iterations = 0
+
+    while True:
+        delta = 0
+
+        for state in range(n_states):
+
+            value = 0
+
+            for action in range(n_actions):
+
+                action_prob = policy[state][action]
+
+                transitions = env.P[state][action]
+
+                for prob, next_state, reward, terminated in transitions:
+
+                    value += action_prob * prob * (
+                        reward + gamma * V[next_state] * (not terminated)
+                    )
+
+            delta = max(delta, abs(V[state] - value))
+            V[state] = value
+
+        iterations += 1
+
+        if delta < theta:
+            break
+
+    return V, iterations
+
+
+# =====================================
+# Run Policy Evaluation
+# =====================================
+V, iterations = policy_evaluation(env)
+
+# =====================================
+# Display Results
+# =====================================
+print("Number of Iterations:", iterations)
+
+print("\nState Value Function:\n")
+print(V)
+
+print("\nState Value Function (4 x 4 Grid):\n")
+print(V.reshape(4,4))
 
 # -------------------------------------------------
 # Display Output
 # -------------------------------------------------
+V, iterations = policy_evaluation(env)
 
-# Change the parameters and observe the results
+print("Number of Iterations:", iterations)
+print("\nState-Value Function as 4x4 Grid:\n")
+print(V.reshape((4, 4)))
 
 ```
 
@@ -118,12 +190,27 @@ Where:
 
 ## Output
 
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/5286c7bb-5b78-4c18-8d03-030cfd2f3897" />
+
+
+
 ```text
 
-Number of Iterations: 
 
-State-Value Function as 4x4 Grid:
+Number of Iterations: 38
 
+State Value Function:
+
+[0.01235356 0.01042298 0.01933735 0.00947697 0.01478582 0.
+ 0.03889412 0.         0.0326019  0.08433739 0.13781067 0.
+ 0.         0.17034467 0.43357932 0.        ]
+
+State Value Function (4 x 4 Grid):
+
+[[0.01235356 0.01042298 0.01933735 0.00947697]
+ [0.01478582 0.         0.03889412 0.        ]
+ [0.0326019  0.08433739 0.13781067 0.        ]
+ [0.         0.17034467 0.43357932 0.        ]]
 
 
 ```
@@ -139,13 +226,9 @@ Iterative policy evaluation was implemented successfully using the Gymnasium Fro
 
 ```text
 
-
+The iterative policy evaluation algorithm successfully computed the expected value of each state under a fixed random policy. States closer to the goal have higher state values, while hole and terminal states have a value of zero. The algorithm converges after repeated Bellman updates, demonstrating how dynamic programming can estimate the value function for a given policy in a finite Markov Decision Process (MDP).
 
 ```
-
-
-
-
 ---
 
 
